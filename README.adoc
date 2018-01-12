@@ -1,0 +1,35 @@
+== Scandit SDK For Codename One
+
+This library provides a wrapper for the https://www.scandit.com/[Scandit barcode scanner] in https://www.codenameone.com[Codename One] apps.
+
+=== Platform Support
+
+Currently iOS and Android are supported.   Call `CodeScanner.isSupported()` to check runtime platform support.
+
+=== Installation
+
+Due to licensing, we can't distribute the ScanditSDK, therefore, in order to use this library, you need to build the library from source.  See "Build Instructions" below.
+
+Once build is complete, copy the `cn1-codescan-scandit.cn1lib` into your app's `lib` directory, and then refresh cn1libs (right-click project > Codename One > Refresh cn1libs).
+
+You'll also need to install the https://github.com/shannah/CN1ObjCBridge[Codename One Objective-C Bridge] cn1lib, as the scandit library depends on it.  You can find this through the extensions section of Codename One Settings.
+
+=== Build Instructions
+
+1. Download both the Android SDK and iOS SDK from https://www.scandit.com/products/barcode-scanner/[Scandit]. Version 5.5.2 recommended as that is the version we used when developing this module.
+2. Copy the `ScanditBarcodeScanner.aar` file from the android SDK into the "native/android" directory.
+3. Copy the `ScanditBarcodeScanner.framework` directory of the iOS SDK into the "native/ios" directory.
+3. Build the project. (`ant jar`).  If the build is successful, you'll find the cn1lib at "dist/cn1-codescan-scandit.cn1lib"
+
+=== Usage Instructions
+
+See the link:CN1ScanditTests/src/com/codename1/tests/scandit/ScanditTest.java[Simple Demo App].
+
+=== License
+
+The library itself is licensed under BSD.  The ScanditSDK carries a proprietary license, which is why it is not included in this distribution.
+
+=== Links
+
+. https://www.codenameone.com[Codename One]
+. https://www.scandit.com/[Scandit]

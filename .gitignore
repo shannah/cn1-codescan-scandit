@@ -1,0 +1,11 @@
+build
+lib/impl
+private
+native/ios/SBS*
+lib/scanditsdk-android-5.5.2.jar
+native/android/ScanditBarcodeScanner.aar
+native/ios/libScanditBarcodeScanner.a
+CN1ScanditTests/lib/impl
+dist
+CN1ScanditTests/lib/cn1-codescan-scandit.cn1lib
+CN1ScanditTests/native/internal_tmp
