@@ -8,18 +8,31 @@ Currently iOS and Android are supported.   Call `CodeScanner.isSupported()` to c
 
 === Installation
 
-Due to licensing, we can't distribute the ScanditSDK, therefore, in order to use this library, you need to build the library from source.  See "Build Instructions" below.
+1. Add the link:cn1-codescan-scandit.cn1lib[cn1-codescan-scandit.cn1lib] to your project's "lib" directory.  (Or install the cn1-codescan-scandit library through Codename One Settings > Extensions).
+2. Install the the https://github.com/shannah/CN1ObjCBridge[Codename One Objective-C Bridge] cn1lib in your project, as the scandit library depends on it. You can find this through the extensions section of Codename One Settings.
+3. Download both the Android SDK and iOS SDK from https://www.scandit.com/products/barcode-scanner/[Scandit]. Version 5.5.2 recommended as that is the version we used when developing this module.
+4. Copy the `ScanditBarcodeScanner.aar` file from the android SDK into the "native/android" directory of your project.
+5. Copy the `ScanditBarcodeScanner.framework` directory of the iOS SDK into the "native/ios" directory of your project.
+6. Refresh CN1libs in your project, and then do a clean and build on your project.  (**This is important!  Don't forget to clean and build**).
+7. Add the following to the `init()` method of your app:
++
+[source,java]
+----
+CodeScanner.install();
+----
+8. Run your project in the simulator at least once.  The first time it runs, it will extract some files from the native SDK.  If everything went OK, you should see a message saying "The ScanditSDK was successfully installed".  You should now be ready to build for iOS and/or Android.
 
-Once build is complete, copy the `cn1-codescan-scandit.cn1lib` into your app's `lib` directory, and then refresh cn1libs (right-click project > Codename One > Refresh cn1libs).
 
-You'll also need to install the https://github.com/shannah/CN1ObjCBridge[Codename One Objective-C Bridge] cn1lib, as the scandit library depends on it.  You can find this through the extensions section of Codename One Settings.
-
-=== Build Instructions
+=== Building from Source
 
 1. Download both the Android SDK and iOS SDK from https://www.scandit.com/products/barcode-scanner/[Scandit]. Version 5.5.2 recommended as that is the version we used when developing this module.
 2. Copy the `ScanditBarcodeScanner.aar` file from the android SDK into the "native/android" directory.
 3. Copy the `ScanditBarcodeScanner.framework` directory of the iOS SDK into the "native/ios" directory.
 3. Build the project. (`ant jar`).  If the build is successful, you'll find the cn1lib at "dist/cn1-codescan-scandit.cn1lib"
+
+==== Building for Distribution
+
+Due to licensing restrictions, we cannot distribute the cn1lib with the ScanditSDK bundled.  To produce a cn1lib that doesn't have the ScanditSDK embedded, run the `release` target of the ANT build file.
 
 === Usage Instructions
 

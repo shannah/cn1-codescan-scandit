@@ -37,6 +37,7 @@ public class ScanditTest {
 
         // Pro only feature
         Log.bindCrashProtection(true);
+        CodeScanner.install();
     }
     
     public void start() {

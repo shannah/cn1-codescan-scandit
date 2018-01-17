@@ -9,3 +9,6 @@ CN1ScanditTests/lib/impl
 dist
 CN1ScanditTests/lib/cn1-codescan-scandit.cn1lib
 CN1ScanditTests/native/internal_tmp
+CN1ScanditTests/native/ios/SBS*.h
+CN1ScanditTests/native/ios/libScanditBarcodeScanner.a
+CN1ScanditTests/native/android/ScanditBarcodeScanner.aar

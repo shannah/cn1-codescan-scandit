@@ -27,6 +27,8 @@ import com.codename1.system.NativeLookup;
 import com.codename1.ui.Display;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Bar Code and QR Code scanner using the Scandit SDK
@@ -238,6 +240,17 @@ public class CodeScanner {
         return licenseKey;
     }
     
+    private static void extractNativeFiles() {
+        try {
+            ScanditInstaller installer = (ScanditInstaller)NativeLookup.create(ScanditInstaller.class);
+            if (installer != null && installer.isSupported()) {
+                installer.extractNativeFiles();
+            }
+        } catch (Throwable t) {
+            Log.e(t);
+        }
+    }
+    
     private CodeScanner() {
         try {
             if (IosCodeScanner.isSupported()) {
@@ -250,7 +263,31 @@ public class CodeScanner {
         }
     }
     
+    /**
+     * Install the native components.
+     */
+    public static void install() {
+        Display.getInstance().setProperty("ShowScanditInstalledMessage", "true");
+        Timer timer = new Timer();
+        TimerTask tt = new TimerTask() {
+
+            @Override
+            public void run() {
+                Display.getInstance().callSerially(()->{
+                    CodeScanner.isSupported();
+                });
+            }
+            
+        };
+        timer.schedule(tt, 2000);
+        
+    }
+    
     public static boolean isSupported() {
+        if (Display.getInstance().isSimulator()) {
+            extractNativeFiles();
+            return false;
+        }
         if (IosCodeScanner.isSupported()) {
             return true;
         }
