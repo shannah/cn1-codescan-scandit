@@ -92,8 +92,9 @@ class IosCodeScanner {
                                 // in the completion handler.
                                 if (modalStartAnimationDone) {
                                     Objc.eval(picker, "stopScanning");
-                                    inProgress = false;
+                                    
                                     Objc.dismissViewController(picker, true, null);
+                                    inProgress = false;
                                     Display.getInstance().callSerially(()->{
                                         callback.scanCompleted(data, symbologyName, null);
                                     });
