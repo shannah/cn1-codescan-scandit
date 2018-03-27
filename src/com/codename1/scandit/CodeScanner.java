@@ -75,7 +75,15 @@ public class CodeScanner {
     private IosCodeScanner iosInstance;
     private static CodeScanner instance;
     private static String licenseKey;
+    static boolean debug;
     
+    /**
+     * Set this flag to add extra debug stack traces on errors.
+     * @param debug 
+     */
+    public static void setDebug(boolean debug) {
+        CodeScanner.debug = debug;
+    }
     
     /**
      * \brief Sentinel value to represent an unknown symbology

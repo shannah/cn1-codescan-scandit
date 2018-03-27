@@ -74,6 +74,10 @@ class IosCodeScanner {
 
                         @Override
                         public Object invoke(Object... args) {
+                            if (!inProgress || modalBufferResult != null) {
+                                // prevent this from scanning twice
+                                return null;
+                            }
                             try {
                                 //Pointer picker = getArgAsPointer(args[0]);
                                 Pointer session = getArgAsPointer(args[1]);
@@ -100,6 +104,9 @@ class IosCodeScanner {
 
                                 
                             } catch (Throwable t) {
+                                if (CodeScanner.debug) {
+                                    Log.e(t);
+                                }
                                 Display.getInstance().callSerially(()->{
                                     callback.scanError(0, t.getMessage());
                                 });
