@@ -21,7 +21,7 @@ public class ScanditInstallerImpl implements com.codename1.scandit.ScanditInstal
             File androidNative = new File(nativeDir, "android");
             File aarFile = new File(androidNative, "ScanditBarcodeScanner.aar");
             File frameworkFile = new File(iosNative, "ScanditBarcodeScanner.framework");
-            File iosLibFile = new File(iosNative, "libScandirBarcodeScanner.a");
+            File iosLibFile = new File(iosNative, "libScanditBarcodeScanner.a");
 
             boolean aarFilePresent = aarFile.exists();
             if (!aarFilePresent && new File("lib/impl/native/android/"+aarFile.getName()).exists()) {

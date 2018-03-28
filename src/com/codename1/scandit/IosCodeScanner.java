@@ -74,45 +74,49 @@ class IosCodeScanner {
 
                         @Override
                         public Object invoke(Object... args) {
-                            if (!inProgress || modalBufferResult != null) {
-                                // prevent this from scanning twice
-                                return null;
-                            }
-                            try {
-                                //Pointer picker = getArgAsPointer(args[0]);
-                                Pointer session = getArgAsPointer(args[1]);
-                                Pointer recognized = Objc.getProperty(session, "newlyRecognizedCodes").asPointer();
-                                Pointer code = Objc.eval(recognized, "firstObject").asPointer();
-                                String symbologyName = Objc.getProperty(code, "symbologyName").asString();
-                                String data = Objc.getProperty(code, "data").asString();
-                                Log.p("Scanned "+symbologyName+" barcode: "+data);
-                                
-                                // The animation to show the camera isn't finished
-                                // we'll store this result in a buffer and then call the callback
-                                // in the completion handler.
-                                if (modalStartAnimationDone) {
-                                    Objc.eval(picker, "stopScanning");
-                                    
-                                    Objc.dismissViewController(picker, true, null);
-                                    inProgress = false;
-                                    Display.getInstance().callSerially(()->{
-                                        callback.scanCompleted(data, symbologyName, null);
-                                    });
-                                } else {
-                                    modalBufferResult = data;
-                                    modalBufferSymbologyName = symbologyName;
+                            Objc.dispatch_async(()->{
+                                if (!inProgress || modalBufferResult != null) {
+                                    // prevent this from scanning twice
+                                    return;
                                 }
+                                try {
+                                    //Pointer picker = getArgAsPointer(args[0]);
+                                    Pointer session = getArgAsPointer(args[1]);
+                                    Pointer recognized = Objc.getProperty(session, "newlyRecognizedCodes").asPointer();
+                                    Pointer code = Objc.eval(recognized, "firstObject").asPointer();
+                                    String symbologyName = Objc.getProperty(code, "symbologyName").asString();
+                                    String data = Objc.getProperty(code, "data").asString();
+                                    Log.p("Scanned "+symbologyName+" barcode: "+data);
 
-                                
-                            } catch (Throwable t) {
-                                if (CodeScanner.debug) {
-                                    Log.e(t);
+                                    // The animation to show the camera isn't finished
+                                    // we'll store this result in a buffer and then call the callback
+                                    // in the completion handler.
+                                    if (modalStartAnimationDone) {
+                                        Objc.eval(picker, "stopScanning");
+
+                                        Objc.dismissViewController(picker, true, null);
+                                        inProgress = false;
+                                        Display.getInstance().callSerially(()->{
+                                            callback.scanCompleted(data, symbologyName, null);
+                                        });
+                                    } else {
+                                        modalBufferResult = data;
+                                        modalBufferSymbologyName = symbologyName;
+                                    }
+
+
+                                } catch (Throwable t) {
+                                    if (CodeScanner.debug) {
+                                        Log.e(t);
+                                    }
+                                    Display.getInstance().callSerially(()->{
+                                        callback.scanError(0, t.getMessage());
+                                    });
                                 }
-                                Display.getInstance().callSerially(()->{
-                                    callback.scanError(0, t.getMessage());
-                                });
-                            }
+                                return;
+                            });
                             return null;
+                            
                         }
 
                     })
@@ -122,12 +126,15 @@ class IosCodeScanner {
 
                         @Override
                         public Object invoke(Object... args) {
-                            Objc.eval(picker, "stopScanning");
-                            inProgress = false;
-                            Objc.dismissViewController(picker, true, null);
-                            Display.getInstance().callSerially(()->{
-                                callback.scanCanceled();
+                            Objc.dispatch_async(()->{
+                                Objc.eval(picker, "stopScanning");
+                                inProgress = false;
+                                Objc.dismissViewController(picker, true, null);
+                                Display.getInstance().callSerially(()->{
+                                    callback.scanCanceled();
+                                });
                             });
+                            
                             
                             return null;
                         }
@@ -138,6 +145,8 @@ class IosCodeScanner {
             Objc.setProperty(overlayController, "cancelDelegate", delegate);
         });
     }
+    
+    
     
     public void setSymbologyEnabled(int symbology, boolean enabled) {
         Objc.eval(picker, "setSymbology:enabled:", symbology, enabled);
