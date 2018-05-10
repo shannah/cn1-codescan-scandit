@@ -27,6 +27,7 @@ import com.codename1.system.NativeLookup;
 import com.codename1.ui.Display;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -291,8 +292,25 @@ public class CodeScanner {
         
     }
     
+    private static boolean cameraUsageDescriptionChecked;
+    
+    private static void checkCameraUsageDescription() {
+        if (!cameraUsageDescriptionChecked) {
+            cameraUsageDescriptionChecked = true;
+            
+            Map<String, String> m = Display.getInstance().getProjectBuildHints();
+            if(m != null) {
+                if(!m.containsKey("ios.NSCameraUsageDescription")) {
+                    Display.getInstance().setProjectBuildHint("ios.NSCameraUsageDescription", "Some functionality of the application requires your camera");
+                }
+            }
+        }
+    }
+    
+    
     public static boolean isSupported() {
         if (Display.getInstance().isSimulator()) {
+            checkCameraUsageDescription();
             extractNativeFiles();
             return false;
         }
